@@ -35,12 +35,13 @@ public class WebGUI : MonoBehaviour
 	public UWKView View;
 	
 	private static string message_from_web = "";
+	
+	private bool bound = false;
 
 	void Start ()
 	{		
 		// Create the view
-		View = UWKCore.CreateView ("MashFX-Unity", URL, Width, Height);		
-		Bridge.BindCallback ("Unity", "SayHello", OnSayHello);
+		View = UWKCore.CreateView ("MashFX-Unity", URL, Width, Height);				
 	} 
 	
 	void OnGUI ()
@@ -48,18 +49,26 @@ public class WebGUI : MonoBehaviour
 		// Draw the view
 		View.OnWebGUI(X, Y, Width, Height, Transparency);
 		
-		if (message_from_web != "") {
-			GUI.Label (new Rect (10, 5, 600, 20), message_from_web);
+		string txt;
+		if (message_from_web == "") {
+			txt = "...waiting for message from browser....";
 		}
+		else {
+			txt = message_from_web;
+		}
+		GUI.Label (new Rect (10, 5, 600, 20), txt);
+		
+		View.EvaluateJavaScript("get_msg();", evalResult);
 	}
 	
-	// Example delegate called as a callback from Javascript on the page
-	public static void OnSayHello (object sender, BridgeEventArgs args)
-	{
-		if (args.Args.Length == 3 && args.Args[0] == "1" && args.Args[1] == "Testing123" && args.Args[2] == "45678")
-			message_from_web = "Hello -- The UWebKit JavaScript Bridge is alive and well!";
-		else
-			message_from_web = "Hello -- The UWebKit JavaScript Bridge callback was invoked, but args were wrong!";	
+	
+	void evalResult (object sender, CommandProcessEventArgs args){
+		Command cmd = args.Cmd;
+	
+		string result = Plugin.GetString(cmd.iParams[0], cmd.iParams[1]);
+	
+		Debug.Log(result);
+		message_from_web = result;
 	}
 	
 }
