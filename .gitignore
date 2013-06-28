@@ -1,0 +1,12 @@
+.DS_Store
+Library
+Library/*
+*.csproj
+*.sln
+*.userprefs
+Temp
+*.pidb
+Build
+build_device
+build_simulator
+
