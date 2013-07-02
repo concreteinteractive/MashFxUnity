@@ -18,15 +18,15 @@ public class WebGUI : MonoBehaviour
 {
 	
 	// URL 
-	public string URL = "http://0.0.0.0:3000/unity";
+	public string URL = "http://mashfx.herokuapp.com/items";
 
 	// position 
 	public int X = 40;
 	public int Y = 10;
 	
 	// dimensions
-	public int Width = 600;
-	public int Height = 400; 
+	public int Width = 800;
+	public int Height = 600; 
 	
 	// transparency
 	public float Transparency = 100.0f;
@@ -54,11 +54,11 @@ public class WebGUI : MonoBehaviour
 			txt = "...waiting for message from browser....";
 		}
 		else {
-			txt = message_from_web;
+			txt = "Purchase: " + message_from_web;
 		}
 		GUI.Label (new Rect (10, 5, 600, 20), txt);
 		
-		View.EvaluateJavaScript("get_msg();", evalResult);
+		View.EvaluateJavaScript("purchase_success", evalResult);
 	}
 	
 	
